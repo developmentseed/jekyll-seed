@@ -1,0 +1,21 @@
+/Users/dmoriarty/.rvm/rubies/ruby-2.2.1/bin/ruby -r ./siteconf20160515-2674-11jfhcx.rb extconf.rb
+creating Makefile
+
+make "DESTDIR=" clean
+
+make "DESTDIR="
+compiling porter.c
+porter.c:359:27: warning: '&&' within '||' [-Wlogical-op-parentheses]
+      if (a > 1 || a == 1 && !cvc(z, z->k - 1)) z->k--;
+                ~~ ~~~~~~~^~~~~~~~~~~~~~~~~~~~
+porter.c:359:27: note: place parentheses around the '&&' expression to silence this warning
+      if (a > 1 || a == 1 && !cvc(z, z->k - 1)) z->k--;
+                          ^
+                   (                          )
+1 warning generated.
+compiling porter_wrap.c
+linking shared-object stemmer.bundle
+ld: warning: directory not found for option '-L/Users/haven/.sm/pkg/active/lib'
+
+make "DESTDIR=" install
+/usr/bin/install -m 0755 stemmer.bundle ./.gem.20160515-2674-9wru3a
