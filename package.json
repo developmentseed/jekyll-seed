@@ -1,49 +1,37 @@
 {
-  "name": "JEKYLLSEED",
+  "name": "jekyll-seed",
   "version": "0.1.0",
   "description": "A starting point for Jekyll based websites.",
+  "author": {
+    "name": "developmentseed"
+  },
   "repository": {
     "type": "git",
-    "url": "JEKYLLSEED"
-  },
-  "author": {
-    "name": "DevelopmentSeed",
-    "url": "JEKYLLSEED"
+    "url": "https://github.com/DylanMoriarty/jekyll-seed/issues"
   },
   "license": "",
-  "bugs": {
-    "url": "JEKYLLSEED/issues"
-  },
   "homepage": "",
   "scripts": {
-    "install": "bundle install --path bundle/cache",
-    "serve": "gulp collecticons && gulp serve",
+    "serve": "gulp serve",
     "build": "DS_ENV=production NODE_ENV=production gulp",
     "lint": "eslint docs/assets/scripts/ --ext .js",
     "test": "echo \"No tests\" && exit 0",
-    "postinstall": "[ -f _config-dev.yml ] || touch _config-dev.yml"
+    "postinstall": "bundle install --path bundle/cache && [ -f _config-dev.yml ] || touch _config-dev.yml"
   },
   "browserify": {
     "transform": [
-      "babelify",
       "require-globify",
       "envify"
     ]
   },
   "devDependencies": {
-    "babel": "^6.5.2",
-    "babel-preset-es2015": "^6.5.0",
-    "babel-preset-react": "^6.5.0",
-    "babelify": "^7.2.0",
     "browser-sync": "^2.11.1",
     "browserify": "^13.0.0",
-    "collecticons-processor": "^2.0.0",
     "del": "^2.2.0",
     "envify": "^3.4.0",
     "eslint": "^2.7.0",
     "eslint-config-standard": "^5.1.0",
     "eslint-plugin-promise": "^1.1.0",
-    "eslint-plugin-react": "^3.16.1",
     "eslint-plugin-standard": "^1.3.2",
     "gulp": "^3.9.1",
     "gulp-cache": "^0.4.2",
