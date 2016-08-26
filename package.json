@@ -1,14 +1,14 @@
 {
-  "name": "JEKYLL SEED",
+  "name": "JEKYLLSEED",
   "version": "0.1.0",
   "description": "A starting point for Jekyll based websites.",
   "repository": {
     "type": "git",
-    "url": "JEKYLL SEED"
+    "url": "JEKYLLSEED"
   },
   "author": {
     "name": "DevelopmentSeed",
-    "url": "JEKYLL SEED"
+    "url": "JEKYLLSEED"
   },
   "license": "",
   "bugs": {
@@ -69,6 +69,6 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0",
-    "yamljs": "^0.2.7",
+    "yamljs": "^0.2.7"
   }
 }
