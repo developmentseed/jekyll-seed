@@ -71,10 +71,7 @@ gulp.task('serve', ['vendorScripts', 'javascript', 'styles', 'jekyll'], function
     'app/**/*.html',
     'app/**/*.md',
     'app/assets/graphics/**/*',
-    '!app/assets/graphics/collecticons/**/*'
   ], ['jekyll', reload]);
-
-  gulp.watch('app/assets/graphics/collecticons/**', ['collecticons']);
 
   gulp.watch('app/assets/styles/**/*.scss', ['styles']);
   gulp.watch('package.json', ['vendorScripts']);
@@ -157,32 +154,6 @@ gulp.task('vendorScripts', function () {
 });
 
 // /////////////////////////////////////////////////////////////////////////////
-// ------------------------ Collecticon tasks --------------------------------//
-// -------------------- (Font generation related) ----------------------------//
-// ---------------------------------------------------------------------------//
-gulp.task('collecticons', function (done) {
-  var args = [
-    'node_modules/collecticons-processor/bin/collecticons.js',
-    'compile',
-    'app/assets/graphics/collecticons/',
-    '--font-embed',
-    '--font-dest', 'app/assets/fonts',
-    '--font-name', 'Collecticons',
-    '--font-types', 'woff',
-    '--style-format', 'sass',
-    '--style-dest', 'app/assets/styles/',
-    '--style-name', 'collecticons',
-    '--class-name', 'collecticons',
-    '--author-name', 'Development Seed',
-    '--author-url', 'https://developmentseed.org/',
-    '--no-preview'
-  ];
-
-  return cp.spawn('node', args, {stdio: 'inherit'})
-    .on('close', done);
-});
-
-// /////////////////////////////////////////////////////////////////////////////
 // -------------------------- Jekyll tasks -----------------------------------//
 // ---------------------------------------------------------------------------//
 gulp.task('jekyll', function (done) {
@@ -208,7 +179,7 @@ gulp.task('jekyll', function (done) {
 // --------------------------- Helper tasks -----------------------------------//
 // ----------------------------------------------------------------------------//
 
-gulp.task('build', ['collecticons'], function () {
+gulp.task('build', function () {
   gulp.start(['vendorScripts', 'javascript', 'styles', 'jekyll'], function () {
     gulp.start(['html', 'images'], function () {
       return gulp.src('_site/**/*')
@@ -274,4 +245,3 @@ gulp.task('images', function () {
     })))
     .pipe(gulp.dest('_site/assets/graphics'));
 });
-
