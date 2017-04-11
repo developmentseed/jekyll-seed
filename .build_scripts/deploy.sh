@@ -9,4 +9,4 @@ git config user.email "travis@somewhere.com"
 git add .
 git commit -m "CI deploy to gh-pages"
 git show-ref
-git push --force --quiet "https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git" master:master
+git push --force --quiet "https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git" master:gh-pages > /dev/null 2>&1
