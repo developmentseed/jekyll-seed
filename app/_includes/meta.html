@@ -1,0 +1,49 @@
+{% if page.title %}
+  {% capture meta_title %}{{ page.title }} — {{ site.title }}{% endcapture %}
+{% else %}
+  {% capture meta_title %}{{ site.title }}{% endcapture %}
+{% endif %}
+
+{% if page.summary %}
+  {% assign meta_summary = page.summary %}
+{% elsif layout.use_excerpt %}
+  {% assign meta_summary = page.content | strip_html | truncatewords: 24 %}
+{% else %}
+  {% assign meta_summary = site.description %}
+{% endif %}
+
+{% if page.meta_image %}
+  {% assign meta_image = page.meta_image %}
+{% elsif page.avatar %}
+  {% capture meta_image %}/assets/graphics/content/speakers/{{ page.avatar }}{% endcapture %}
+{% else %}
+  {% assign meta_image = "/assets/graphics/meta/default-meta-image.png" %}
+{% endif %}
+
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="description" content="{{ meta_summary }}" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+<title>{{ meta_title }}</title>
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="" />
+<meta name="twitter:title" content="{{ meta_title }}">
+<meta name="twitter:description" content="{{ meta_summary }}" />
+<meta name="twitter:image:src" content="{{ site.baseurl }}{{ meta_image }}" />
+<!--/ Twitter --> 
+
+<!-- OG -->
+<meta property="og:site_name" content="" />
+<meta property="og:title" content="{{ meta_title }}" />
+<meta property="og:url" content="{{ site.baseurl }}{{ page.url | remove:'index.html' }}" />
+<meta property="og:type" content="website" />
+<meta property="og:description" content="{{ meta_summary }}" />
+<meta property="og:image" content="{{ site.baseurl }}{{ meta_image }}" />
+<!--/ OG -->
+
+<link rel="icon" type="image/png" sizes="96x96" href="{{ site.baseurl }}/assets/graphics/meta/favicon.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="{{ site.baseurl }}/assets/graphics/meta/android-chrome.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="{{ site.baseurl }}/assets/graphics/meta/apple-touch-icon.png" />

@@ -1,7 +1,8 @@
-'use strict'
+'use strict';
+
 var fs = require('fs');
 var gulp = require('gulp');
-var $ = require ('gulp-load-plugins')();
+var $ = require('gulp-load-plugins')();
 var del = require('del');
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
@@ -10,14 +11,14 @@ var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var sourcemaps = require('gulp-sourcemaps');
-var gutil = require('gulp-util');
+var log = require('fancy-log');
 var exit = require('gulp-exit');
-var rev = require('gulp-rev')
+var rev = require('gulp-rev');
 var revReplace = require('gulp-rev-replace');
-var notifier = require('node-notifier');
 var cp = require('child_process');
 var YAML = require('yamljs');
 var SassString = require('node-sass').types.String;
+var notifier = require('node-notifier');
 
 // /////////////////////////////////////////////////////////////////////////////
 // --------------------------- Variables -------------------------------------//
@@ -29,12 +30,10 @@ var pkg;
 // Environment
 // Set the correct environment, which controls what happens in config.js
 if (!process.env.DS_ENV) {
-  if (process.env.TRAVIS_BRANCH && process.env.TRAVIS_BRANCH !== process.env.DEPLOY_BRANCH) {
+  if (!process.env.CIRCLE_BRANCH || process.env.CIRCLE_BRANCH !== process.env.PRODUCTION_BRANCH) {
     process.env.DS_ENV = 'staging';
-  } else if (process.env.TRAVIS_BRANCH && process.env.TRAVIS_BRANCH === process.env.DEPLOY_BRANCH) {
-    process.env.DS_ENV = 'production';
   } else {
-    process.env.DS_ENV = 'development';
+    process.env.DS_ENV = 'production';
   }
 }
 
@@ -63,6 +62,9 @@ gulp.task('serve', ['vendorScripts', 'javascript', 'styles', 'jekyll'], function
     port: 3000,
     server: {
       baseDir: ['.tmp', '_site'],
+      routes: {
+        '/node_modules': './node_modules'
+      }
     }
   });
 
@@ -99,7 +101,7 @@ gulp.task('javascript', function () {
     cache: {},
     packageCache: {},
     fullPaths: true
-  }));
+  }), {poll: true});
 
   function bundler () {
     if (pkg.dependencies) {
@@ -128,8 +130,8 @@ gulp.task('javascript', function () {
   }
 
   watcher
-  .on('log', gutil.log)
-  .on('update', bundler);
+    .on('log', log)
+    .on('update', bundler);
 
   return bundler();
 });
@@ -144,7 +146,7 @@ gulp.task('vendorScripts', function () {
     require: pkg.dependencies ? Object.keys(pkg.dependencies) : []
   });
   return vb.bundle()
-    .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+    .on('error', log.bind(log, 'Browserify Error'))
     .pipe(source('vendor.js'))
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true}))
@@ -178,7 +180,6 @@ gulp.task('jekyll', function (done) {
 // //////////////////////////////////////////////////////////////////////////////
 // --------------------------- Helper tasks -----------------------------------//
 // ----------------------------------------------------------------------------//
-
 gulp.task('build', function () {
   gulp.start(['vendorScripts', 'javascript', 'styles', 'jekyll'], function () {
     gulp.start(['html', 'images'], function () {
@@ -214,7 +215,7 @@ gulp.task('styles', function () {
           return v;
         }
       },
-      includePaths: require('node-bourbon').with('.', 'node_modules/jeet/scss')
+      includePaths: ['.'].concat(require('node-bourbon').includePaths)
     }))
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest('.tmp/assets/styles'))
@@ -226,22 +227,24 @@ gulp.task('html', function () {
   var jkConf = YAML.load('_config.yml');
   return gulp.src('_site/**/*.html')
     .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
-    .pipe($.if('*.js', $.uglify()))
+    // Do not compress comparisons, to avoid MapboxGLJS minification issue
+    // https://github.com/mapbox/mapbox-gl-js/issues/4359#issuecomment-286277540
+    .pipe($.if('*.js', $.uglify({compress: {comparisons: false}})))
     .pipe($.if('*.css', $.csso()))
     .pipe($.if(/\.(css|js)$/, rev()))
     .pipe(revReplace({prefix: jkConf.baseurl}))
     .pipe(gulp.dest('_site'));
 });
 
-// Compress images.
 gulp.task('images', function () {
   return gulp.src('_site/assets/graphics/**/*')
-    .pipe($.cache($.imagemin({
-      progressive: true,
-      interlaced: true,
+    .pipe($.cache($.imagemin([
+      $.imagemin.gifsicle({interlaced: true}),
+      $.imagemin.jpegtran({progressive: true}),
+      $.imagemin.optipng({optimizationLevel: 5}),
       // don't remove IDs from SVGs, they are often used
-      // as hooks for embedding and styling
-      svgoPlugins: [{cleanupIDs: false}]
-    })))
+      // as hooks for embedding and styling.
+      $.imagemin.svgo({plugins: [{cleanupIDs: false}]})
+    ])))
     .pipe(gulp.dest('_site/assets/graphics'));
 });
