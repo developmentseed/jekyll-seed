@@ -1,7 +1,50 @@
-// Charset
+/* ==========================================================================
+   Main
+   ========================================================================== */
+
+/**
+ * Following Necolas' Principles of writing consistent, idiomatic CSS:
+ * https://github.com/necolas/idiomatic-css
+ */
+
+/* Charset */
+
 @charset "UTF-8";
 
-// Reset and normalize
-@import "variables";
+
+/* Libraries
+   ========================================================================== */
+
+/**
+ * Using Bourbon for extended SASS functionality:
+ * http://bourbon.io/
+ */
+
+@import "bourbon";
+
+
+/* Reboot
+   ========================================================================== */
+
+@import "normalize";
 @import "reset";
-@import "syntax-highlighting";
+
+/**
+ * Using Kenneth Ormandy's OpenType features—ligatures, kerning, and
+ * more—to Normalize.css:
+ * https://github.com/kennethormandy/normalize-opentype.css
+ */
+
+@import "normalize-opentype";
+
+@import "pygments";
+
+
+/* Settings
+   ========================================================================== */
+
+
+/* Main
+   ========================================================================== */
+
+@import "base";

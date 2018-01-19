@@ -1,13 +1,14 @@
-# Site settings
-title: Jekyll Seed
-safe:           false
-source:         app
+source: app
+# To exclude inside app/
 exclude:
   - assets/scripts
-  - assets/vendor
   - assets/styles
-  - README.md
-timezone: America/New_York
-highlighter: false 
+  - assets/graphics/collecticons
+baseurl: ''
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
 
-baseurl: ""
+# Global variables.
+title: 'Jekyll starter'
+decription: A starting point for Jekyll based websites.
